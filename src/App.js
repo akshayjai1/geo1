@@ -167,7 +167,7 @@ class App extends Component {
           content={this.state.content}
           doneDrawing={this.doneDrawing.bind(this)}
         />
-        <MapWithASearchBox/>
+        {/* <MapWithASearchBox/> */}
       </div>);
     } else {
       map = <p>Getting location...</p>;

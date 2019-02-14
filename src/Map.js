@@ -6,9 +6,9 @@ import {
   Marker,
   withScriptjs
 } from 'react-google-maps';
+import { compose } from 'recompose';
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager"
-
-export default withScriptjs(withGoogleMap(props => (
+const GoogleMap1 = props => (
   <GoogleMap
     defaultZoom={15}
     center={props.center}
@@ -30,4 +30,5 @@ export default withScriptjs(withGoogleMap(props => (
       <Marker position={props.center} />
     )}
   </GoogleMap>
-)));
+)
+export default compose(withScriptjs,withGoogleMap)(GoogleMap1);
