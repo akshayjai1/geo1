@@ -5,12 +5,14 @@
   "dependencies": {
     "google-map-react": "^1.1.2",
     "google-maps-react": "^2.0.2",
+    "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-google-maps": "^9.4.5",
     "react-moment": "^0.8.4",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "recompose": "^0.30.0"
   },
   "scripts": {
     "start": "react-scripts start",
