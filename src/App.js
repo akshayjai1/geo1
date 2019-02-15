@@ -4,13 +4,17 @@ import Moment from 'react-moment';
 import Map from './Map';
 import './App.css';
 import MapWithASearchBox from './MapWithSearchBox';
-
+import { withProps } from 'recompose';
 const googleMapURL = `https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=${process.env.REACT_APP_MAPS_API_KEY}`;
-
+const MapWithProps = withProps({
+  googleMapURL,
+  loadingElement: <p>Loading maps...</p>,
+  containerElement: <div className="map-container" />,
+  mapElement: <div className="map" />
+})(Map);
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       center: {
         // CN Tower default
@@ -152,17 +156,7 @@ class App extends Component {
         <p>
           Last fetched: <Moment interval={10000} fromNow>{this.state.lastFetched}</Moment>
         </p>
-        <Map
-          googleMapURL={googleMapURL}
-          loadingElement={
-            <p>Loading maps...</p>
-          }
-          containerElement={
-            <div className="map-container" />
-          }
-          mapElement={
-            <div className="map" />
-          }
+        <MapWithProps
           center={this.state.center}
           content={this.state.content}
           doneDrawing={this.doneDrawing.bind(this)}
