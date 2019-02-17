@@ -6,25 +6,26 @@ import Map from './Map';
 import './App.css';
 import MapWithASearchBox from './MapWithSearchBox';
 import { withProps } from 'recompose';
-import { MapConfig } from './constants/MapConstants';
-import { setCenter } from './actions/MapActions/MapActions';
+import { MapConfig, PolygonOptions } from './constants/MapConstants';
+import { setCenter, setWatchId, setInsideFence } from './actions/MapActions/MapActions';
 const MapWithProps = withProps(MapConfig)(Map);
 class App extends Component {
   constructor(props) {
     super(props);
     console.log('this is props.center',props.center);
-    this.state = {
-      center: props.center,
-      content: 'Getting position...',
-      insideFence: false,
-      previousPolygon: null,
-      fence: null,
-      watchID: null,
-      lastFetched: null,
-    };
+    // this.state = {
+    //   center: props.center,
+    //   content: props.content,
+    //   insideFence: false,
+    //   previousPolygon: null,
+    //   fence: props.fence,
+    //   watchID: null,
+    //   lastFetched: props.lastFetched,
+    // };
   }
 
   componentDidMount() {
+    console.log('inside component did mount');
     this.watchLocation();
   }
 
@@ -39,49 +40,45 @@ class App extends Component {
         maximumAge : 30000,
         timeout : 27000
       };
-
-      navigator.geolocation.watchPosition(this.getLocation.bind(this), null, geoOptions);
+      console.log('about to watch location');
+      const watchId = navigator.geolocation.watchPosition(this.setLocation, null, geoOptions);
+      this.props.setWatchIdProp(watchId);
+      console.log('this is watch Id',watchId,this);
     } else {
       alert('Geolocation is not supported by this browser.');
     }
   }
 
   unwatchLocation() {
-    if ('geolocation' in navigator && this.state.watchID) {
-      navigator.geolocation.clearWatch(this.state.watchID);
+    if ('geolocation' in navigator && this.props.watchID) {
+      console.log('clearing watch');
+      navigator.geolocation.clearWatch(this.props.watchID);
     }
   }
 
-  getLocation(position) {
-    const center = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-    console.log('calling setCenter props on ',this.props,' with center ',center);
-    this.props.setCenterProp(center);
-    this.setState({
-      center,
+  setLocation = (position) => {
+    console.log('setting location');
+    const centerDetail = {
+      center: {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      },
       content: `Location found.`,
       lastFetched: position.timestamp,
-    });
-
+    };
+    console.log('calling setCenter props on ',this.props,' with center ',centerDetail);
+    this.props.setCenterProp(centerDetail);
     this.checkGeofence();
   }
 
   checkGeofence() {
-    if (!this.state.fence) {
-      this.setState({
-        insideFence: false,
-      });
+    console.log('inside fn checkGeoFence');
+    if (!this.props.fence) {
       return;
     }
-
     const insideFence = google.maps.geometry.poly
-      .containsLocation(this.getCurrentPosition(), this.state.fence);
-
-    this.setState({
-      insideFence,
-    });
+      .containsLocation(this.getCurrentPosition(), this.props.fence);
+    this.props.setInsideFenceProp(insideFence);
   }
   printPolygonVertices = (pathObj) => {
     console.log('printing polygon vertices');
@@ -90,37 +87,17 @@ class App extends Component {
       console.log(vertex.lat(),vertex.lng());
     }
   }
-  doneDrawing(polygon) {
+  doneDrawing = (polygon) => {
     if (this.state.previousPolygon) {
       this.state.previousPolygon.setMap(null);
     }
 
     this.setState({previousPolygon: polygon});
     console.log('this is polygon',polygon);
-    const options = {
-      editable: true,
-      draggable: true,
-      opacity: 0,
-      strokeOpacity: 0.5,
-      strokeColor: '#00ffa0',
-      strokeWeight: 3,
-      fillOpacity:0,
-    }
-    polygon.setOptions(options);
-    const customPolygon1 = [
-      {lat:14,lng:80},
-      {lat:13,lng:80},
-      {lat:14,lng:81},
-    ];
-    const customPolygon2 = [
-      {lat:14,lng:80},
-      {lat:13,lng:81},
-      {lat:14,lng:81},
-    ]
-    const customPolygons = [customPolygon1,customPolygon2];
-    polygon.setPaths(customPolygons);
+    
+    polygon.setOptions(PolygonOptions);
+    polygon.setPaths(this.props.polygons);
     console.log('inside function done drawing, these are polygon vertices, ', polygon.getPaths());
-    console.log('inside function done drawing, these are polygon vertices, ', polygon.getPath());
     this.printPolygonVertices(polygon.getPaths());
     this.setState({
       fence: new google.maps.Polygon({
@@ -132,7 +109,9 @@ class App extends Component {
   }
 
   getCurrentPosition() {
-    const currentPosition = new google.maps.LatLng(this.state.center.lat, this.state.center.lng);
+    // const currentPosition = new google.maps.LatLng(this.state.center.lat, this.state.center.lng);
+    const currentPosition = this.props.center;
+    console.log('returning current position',currentPosition);
     return currentPosition;
   }
 
@@ -141,23 +120,23 @@ class App extends Component {
     let map = null;
     let fenceStatus = null;
 
-    if (this.state.fence) {
-      if (this.state.insideFence) {
+    if (this.props.fence) {
+      if (this.props.insideFence) {
         fenceStatus = <p>You are inside the fence.</p>;
       } else {
         fenceStatus = <p>You are outside the fence.</p>;
       }
     }
 
-    if (this.state.lastFetched) {
+    if (this.props.lastFetched) {
       map = (<div>
         <p>
-          Last fetched: <Moment interval={10000} fromNow>{this.state.lastFetched}</Moment>
+          Last fetched: <Moment interval={10000} fromNow>{this.props.lastFetched}</Moment>
         </p>
         <MapWithProps
-          center={this.state.center}
-          content={this.state.content}
-          doneDrawing={this.doneDrawing.bind(this)}
+          center={this.props.center}
+          content={this.props.content}
+          doneDrawing={this.doneDrawing}
         />
         {/* <MapWithASearchBox/> */}
       </div>);
@@ -175,14 +154,20 @@ class App extends Component {
 }
 const mapStateToProps = (props)=>{
   console.log('inside mapStateToProps function of App.js, this is passed in props',props);
-  return {
-    center: props.MapReducer.center,
-  }
+  const { center, content, lastFetched, fence, insideFence, previousPolygon, watchID } = props.MapReducer.centerDetail;
+  const { polygons } = props.MapReducer.polygonDetail;
+  return { center, content, lastFetched, fence, insideFence, previousPolygon, watchID, polygons };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     setCenterProp : center => {
       dispatch(setCenter(center));
+    },
+    setWatchIdProp: watchId => {
+      dispatch(setWatchId(watchId))
+    },
+    setInsideFenceProp: insideFence => {
+      dispatch(setInsideFence(insideFence));
     }
   }
 }

@@ -11,3 +11,12 @@ export const MapConfig = {
   containerElement,
   mapElement
 };
+export const PolygonOptions = {
+  editable: true,
+  draggable: true,
+  opacity: 0,
+  strokeOpacity: 0.5,
+  strokeColor: '#00ffa0',
+  strokeWeight: 3,
+  fillOpacity:0,
+}
