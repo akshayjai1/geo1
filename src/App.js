@@ -7,16 +7,14 @@ import './App.css';
 import MapWithASearchBox from './MapWithSearchBox';
 import { withProps } from 'recompose';
 import { MapConfig } from './constants/MapConstants';
+import { setCenter } from './actions/MapActions/MapActions';
 const MapWithProps = withProps(MapConfig)(Map);
 class App extends Component {
   constructor(props) {
     super(props);
+    console.log('this is props.center',props.center);
     this.state = {
-      center: {
-        // CN Tower default
-        lat: 43.642558,
-        lng: -79.387046,
-      },
+      center: props.center,
       content: 'Getting position...',
       insideFence: false,
       previousPolygon: null,
@@ -55,11 +53,14 @@ class App extends Component {
   }
 
   getLocation(position) {
+    const center = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+    console.log('calling setCenter props on ',this.props,' with center ',center);
+    this.props.setCenterProp(center);
     this.setState({
-      center: {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      },
+      center,
       content: `Location found.`,
       lastFetched: position.timestamp,
     });
@@ -178,4 +179,11 @@ const mapStateToProps = (props)=>{
     center: props.MapReducer.center,
   }
 };
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCenterProp : center => {
+      dispatch(setCenter(center));
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App);
