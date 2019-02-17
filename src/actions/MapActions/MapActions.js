@@ -30,3 +30,24 @@ export const setInsideFence = (insideFence) => {
       }
   }
 }
+
+export const setFence = (fence) => {
+  console.log('inside setFence with fence =  ',fence);
+  return {
+      type: types.SET_FENCE,
+      payload: {
+        fence,
+      }
+  }
+}
+
+
+export const setPolygon = (polygon) => {
+  console.log('inside setPolygon with polygon =  ',polygon);
+  return {
+      type: types.SET_POLYGON,
+      payload: {
+        previousPolygon:polygon,
+      }
+  }
+}

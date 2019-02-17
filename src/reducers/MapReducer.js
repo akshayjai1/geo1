@@ -47,7 +47,7 @@ export default (state = initialState, action) => {
                 ...state,
                 centerDetail: {
                     ...state.centerDetail,
-                    ...action.payload.centerDetail
+                    ...action.payload
                 }
             };
             console.log('this is reduced state in setWatchId',x);
@@ -58,11 +58,33 @@ export default (state = initialState, action) => {
                 ...state,
                 centerDetail: {
                     ...state.centerDetail,
-                    ...action.payload.centerDetail
+                    ...action.payload
                 }
             };
-            console.log('this is reduced state in setFence',x);
+            console.log('this is reduced state in setInsideFence',x);
             return x;
+        case types.SET_FENCE: 
+        console.log('reducing fence with state and action.payload',state,action.payload);
+        var x =  {
+            ...state,
+            centerDetail: {
+                ...state.centerDetail,
+                ...action.payload
+            }
+        };
+        console.log('this is reduced state in setFence',x);
+        return x;
+        case types.SET_POLYGON: 
+        console.log('reducing setPolygon with state and action.payload',state,action.payload);
+        var x =  {
+            ...state,
+            centerDetail: {
+                ...state.centerDetail,
+                ...action.payload
+            }
+        };
+        console.log('this is reduced state in setFence',x);
+        return x;
         default:
             console.log('executing default action',state);
             return state;

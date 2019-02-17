@@ -7,7 +7,7 @@ import './App.css';
 import MapWithASearchBox from './MapWithSearchBox';
 import { withProps } from 'recompose';
 import { MapConfig, PolygonOptions } from './constants/MapConstants';
-import { setCenter, setWatchId, setInsideFence } from './actions/MapActions/MapActions';
+import { setCenter, setWatchId, setInsideFence, setPolygon, setFence } from './actions/MapActions/MapActions';
 const MapWithProps = withProps(MapConfig)(Map);
 class App extends Component {
   constructor(props) {
@@ -71,7 +71,7 @@ class App extends Component {
     this.checkGeofence();
   }
 
-  checkGeofence() {
+  checkGeofence = () => {
     console.log('inside fn checkGeoFence');
     if (!this.props.fence) {
       return;
@@ -88,29 +88,31 @@ class App extends Component {
     }
   }
   doneDrawing = (polygon) => {
-    if (this.state.previousPolygon) {
-      this.state.previousPolygon.setMap(null);
+    if (this.props.previousPolygon) {
+      this.props.previousPolygon.setMap(null);
     }
-
-    this.setState({previousPolygon: polygon});
+    this.props.setPolygonProp(polygon);
+    // this.setState({previousPolygon: polygon});
     console.log('this is polygon',polygon);
-    
     polygon.setOptions(PolygonOptions);
-    polygon.setPaths(this.props.polygons);
+    // polygon.setPaths(this.props.polygons);
     console.log('inside function done drawing, these are polygon vertices, ', polygon.getPaths());
     this.printPolygonVertices(polygon.getPaths());
-    this.setState({
-      fence: new google.maps.Polygon({
-        paths: polygon.getPaths(),
-      }),
-    });
-
+    // this.setState({
+    //   fence: new google.maps.Polygon({
+    //     paths: polygon.getPaths(),
+    //   }),
+    // });
+    this.props.setFenceProp(new google.maps.Polygon({
+      paths: polygon.getPaths(),
+    }) );
     this.checkGeofence();
   }
 
   getCurrentPosition() {
-    // const currentPosition = new google.maps.LatLng(this.state.center.lat, this.state.center.lng);
-    const currentPosition = this.props.center;
+    const { center } = this.props;
+    const currentPosition = new google.maps.LatLng(center.lat, center.lng);
+    // const currentPosition = this.props.center;
     console.log('returning current position',currentPosition);
     return currentPosition;
   }
@@ -168,6 +170,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     setInsideFenceProp: insideFence => {
       dispatch(setInsideFence(insideFence));
+    },
+    setFenceProp: fence => {
+      dispatch(setFence(fence));
+    },
+    setPolygonProp: polygon => {
+      dispatch(setPolygon(polygon));
     }
   }
 }
