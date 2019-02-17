@@ -1,17 +1,13 @@
 /* global google */
 import React, {Component} from 'react';
 import Moment from 'react-moment';
+import { connect } from 'react-redux';
 import Map from './Map';
 import './App.css';
 import MapWithASearchBox from './MapWithSearchBox';
 import { withProps } from 'recompose';
-const googleMapURL = `https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=${process.env.REACT_APP_MAPS_API_KEY}`;
-const MapWithProps = withProps({
-  googleMapURL,
-  loadingElement: <p>Loading maps...</p>,
-  containerElement: <div className="map-container" />,
-  mapElement: <div className="map" />
-})(Map);
+import { MapConfig } from './constants/MapConstants';
+const MapWithProps = withProps(MapConfig)(Map);
 class App extends Component {
   constructor(props) {
     super(props);
@@ -140,6 +136,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('inside the render method of app, this is props', this.props);
     let map = null;
     let fenceStatus = null;
 
@@ -175,5 +172,10 @@ class App extends Component {
     );
   }
 }
-
-export default App;
+const mapStateToProps = (props)=>{
+  console.log('inside mapStateToProps function of App.js, this is passed in props',props);
+  return {
+    center: props.MapReducer.center,
+  }
+};
+export default connect(mapStateToProps)(App);
