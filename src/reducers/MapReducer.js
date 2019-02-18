@@ -20,6 +20,7 @@ const initialState = {
         insideFence: false,
         previousPolygon: null,
         watchID: null,
+        
     },
     polygonDetail : {
         polygons: customPolygons,

@@ -23,10 +23,8 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <React.Fragment>
-            <ul>
-              <NavLink to="/geoFence"><li>GeoFence</li></NavLink>
-              <NavLink to="/geoSearch"><li>Search</li></NavLink>
-            </ul>
+              <NavLink to="/geoFence">GeoFence</NavLink>{"  "}
+              <NavLink to="/geoSearch">Search</NavLink>
           <Switch>
             <Route path="/geoFence" component={GeoMap} />
             <Route path="/geoSearch" component={MapWithASearchBox} />
