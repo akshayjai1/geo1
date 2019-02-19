@@ -12,16 +12,13 @@ const customPolygon2 = [
 const customPolygons = [customPolygon1,customPolygon2];
 
 const initialState = {
-    centerDetail : {
-        center: {lat: 43.642558, lng: 74},
-        content: 'Getting Position...',
-        lastFetched: null,
-        fence: null,
-        insideFence: false,
-        previousPolygon: null,
-        watchID: null,
-        
-    },
+    center: {lat: 43.642558, lng: 74},
+    content: 'Getting Position...',
+    lastFetched: null,
+    fence: null,
+    insideFence: false,
+    previousPolygon: null,
+    watchID: null,
     polygonDetail : {
         polygons: customPolygons,
     }
@@ -36,10 +33,7 @@ export default (state = initialState, action) => {
             console.log('reducing setCenter',action.payload,state);
             x =  {
                 ...state,
-                centerDetail: {
-                    ...state.centerDetail,
-                    ...action.payload.centerDetail
-                }
+                ...action.payload
             };
             console.log('this is reduced state in setCenter',x);
             return x;
@@ -47,10 +41,7 @@ export default (state = initialState, action) => {
             console.log('setting watch Id to ',action.payload.watchID);
             x =  {
                 ...state,
-                centerDetail: {
-                    ...state.centerDetail,
-                    ...action.payload
-                }
+                ...action.payload
             };
             console.log('this is reduced state in setWatchId',x);
             return x;
@@ -58,10 +49,7 @@ export default (state = initialState, action) => {
             console.log('reducing inside fence with state and action.payload',state,action.payload);
             x =  {
                 ...state,
-                centerDetail: {
-                    ...state.centerDetail,
-                    ...action.payload
-                }
+                ...action.payload
             };
             console.log('this is reduced state in setInsideFence',x);
             return x;
@@ -69,10 +57,7 @@ export default (state = initialState, action) => {
             console.log('reducing fence with state and action.payload',state,action.payload);
             x =  {
                 ...state,
-                centerDetail: {
-                    ...state.centerDetail,
-                    ...action.payload
-                }
+                ...action.payload
             };
             console.log('this is reduced state in setFence',x);
             return x;
@@ -80,12 +65,9 @@ export default (state = initialState, action) => {
             console.log('reducing setPolygon with state and action.payload',state,action.payload);
             x =  {
                 ...state,
-                centerDetail: {
-                    ...state.centerDetail,
-                    ...action.payload
-                }
+                ...action.payload
             };
-            console.log('this is reduced state in setFence',x);
+            console.log('this is reduced state in setPolygon',x);
             return x;
         case types.SET_BOUNDS: 
             console.log('reducing setBounds with state and action.payload',state,action.payload);

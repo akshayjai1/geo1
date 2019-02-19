@@ -5,7 +5,7 @@ export const setCenter = (centerDetail) => {
     dispatch({
       type: types.SET_CENTER,
       payload: {
-        centerDetail,
+        ...centerDetail,
       }
     });
   }

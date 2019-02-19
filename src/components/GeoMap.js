@@ -148,7 +148,7 @@ class GeoMap extends Component {
 }
 const mapStateToProps = (props)=>{
   console.log('inside mapStateToProps function of App.js, this is passed in props',props);
-  const { center, content, lastFetched, fence, insideFence, previousPolygon, watchID } = props.MapReducer.centerDetail;
+  const { center, content, lastFetched, fence, insideFence, previousPolygon, watchID } = props.MapReducer;
   const { polygons } = props.MapReducer.polygonDetail;
   return { center, content, lastFetched, fence, insideFence, previousPolygon, watchID, polygons };
 };
