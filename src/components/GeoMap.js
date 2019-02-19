@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import Map from './DrawingManager';
 import { withProps } from 'recompose';
 import { MapConfig, PolygonOptions } from '../constants/MapConstants';
-import { setCenter, setWatchId, setInsideFence, setPolygon, setFence } from '../actions/MapActions/MapActions';
+import { setCenter, setWatchId, setInsideFence, setPolygon, setFence, setBounds, setMarkers } from '../actions/MapActions/MapActions';
+
 const MapWithProps = withProps(MapConfig)(Map);
 class GeoMap extends Component {
   constructor(props) {
@@ -107,7 +108,7 @@ class GeoMap extends Component {
   }
 
   render() {
-    console.log('inside the render method of app, this is props', this.props);
+    console.log('inside the render method of GeoMap, this is props', this.props);
     let map = null;
     let fenceStatus = null;
 
@@ -125,9 +126,11 @@ class GeoMap extends Component {
           Last fetched: <Moment interval={10000} fromNow>{this.props.lastFetched}</Moment>
         </p>
         <MapWithProps
+          {...this.props}
           center={this.props.center}
           content={this.props.content}
           doneDrawing={this.doneDrawing}
+
         />
         {/* <MapWithASearchBox/> */}
       </div>);
@@ -151,8 +154,8 @@ const mapStateToProps = (props)=>{
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setCenterProp : center => {
-      dispatch(setCenter(center));
+    setCenterProp : centerDetail => {
+      dispatch(setCenter(centerDetail));
     },
     setWatchIdProp: watchId => {
       dispatch(setWatchId(watchId))
@@ -165,6 +168,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     setPolygonProp: polygon => {
       dispatch(setPolygon(polygon));
+    },
+    setBoundsProp: bounds => {
+      dispatch(setBounds(bounds));
+    },
+    setMarkersProp: markers => {
+      dispatch(setMarkers(markers));
     }
   }
 }

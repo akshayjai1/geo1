@@ -31,6 +31,7 @@ const MapWithASearchBox = compose(
           refs.map = ref;
         },
         onBoundsChanged: () => {
+          console.log("inside onBoundsChanged function, this is the value of this",this);
           this.setState({
             bounds: refs.map.getBounds(),
             center: refs.map.getCenter(),
@@ -42,6 +43,7 @@ const MapWithASearchBox = compose(
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
           const bounds = new google.maps.LatLngBounds();
+          console.log('after place changed, these is bounds and places', bounds, places)
 
           places.forEach(place => {
             if (place.geometry.viewport) {
@@ -54,7 +56,7 @@ const MapWithASearchBox = compose(
             position: place.geometry.location,
           }));
           const nextCenter = _.get(nextMarkers, '0.position', this.state.center);
-
+          console.log('this is new center and marker ', nextCenter, nextMarkers);
           this.setState({
             center: nextCenter,
             markers: nextMarkers,
@@ -68,9 +70,9 @@ const MapWithASearchBox = compose(
   withGoogleMap
 )(props =>
   <GoogleMap
-    ref={props.onMapMounted}
     defaultZoom={15}
     center={props.center}
+    ref={props.onMapMounted}
     onBoundsChanged={props.onBoundsChanged}
   >
     <SearchBox

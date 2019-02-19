@@ -51,3 +51,23 @@ export const setPolygon = (polygon) => {
       }
   }
 }
+
+export const setBounds = (bounds) => {
+  console.log('inside setBounds with bounds =  ',bounds);
+  return {
+      type: types.SET_BOUNDS,
+      payload: {
+        bounds,
+      }
+  }
+}
+
+export const setMarkers = (markers) => {
+  console.log('inside setMarkers with markers =  ', markers);
+  return {
+      type: types.SET_MARKERS,
+      payload: {
+        markers,
+      }
+  }
+}
