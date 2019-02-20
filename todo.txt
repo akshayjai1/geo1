@@ -1,0 +1,7 @@
+1. input to enter polygon vertices
+2. search box and the change center
+3. connect redux dev tools
+4. connect graphql
+5. connect relay
+6. export vertices
+7. multiple polygons
