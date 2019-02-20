@@ -1,15 +1,13 @@
 import React from 'react';
+import { googleMapURL } from './constants/MapConstants';
+import { compose, withProps, lifecycle } from 'recompose';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { connect } from 'react-redux';
+import SearchReducer from './reducers/SearchReducer';
+import { setCenterSearch } from './actions/SearchActions';
 const _ = require("lodash");
-const { compose, withProps, lifecycle } = require("recompose");
-const {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-} = require("react-google-maps");
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 const google = window.google = window.google ? window.google : {}
-const googleMapURL = `https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=${process.env.REACT_APP_MAPS_API_KEY}`;
 const MapWithASearchBox = compose(
   withProps({
     googleMapURL,
@@ -18,15 +16,16 @@ const MapWithASearchBox = compose(
     mapElement: <div style={{ height: `100%` }} />,
   }),
   lifecycle({
-    componentWillMount() {
+    componentWillMount(props) {
+      console.log('inside component will mount of mapwithsearchbox, this are the arguments and this', arguments,this);
       const refs = {}
-
+      console.log('this is the value of this in componentWillMount of MapWithSearchbox',this);
       this.setState({
-        bounds: null,
-        center: {
-          lat: 41.9, lng: -87.624
-        },
-        markers: [],
+        // bounds: null,
+        // center: {
+        //   lat: 41.9, lng: -87.624
+        // },
+        markers: this.props.markers,
         onMapMounted: ref => {
           refs.map = ref;
         },
@@ -35,7 +34,7 @@ const MapWithASearchBox = compose(
           this.setState({
             bounds: refs.map.getBounds(),
             center: refs.map.getCenter(),
-          })
+          });
         },
         onSearchBoxMounted: ref => {
           refs.searchBox = ref;
@@ -44,7 +43,6 @@ const MapWithASearchBox = compose(
           const places = refs.searchBox.getPlaces();
           const bounds = new google.maps.LatLngBounds();
           console.log('after place changed, these is bounds and places', bounds, places)
-
           places.forEach(place => {
             if (place.geometry.viewport) {
               bounds.union(place.geometry.viewport)
@@ -57,6 +55,9 @@ const MapWithASearchBox = compose(
           }));
           const nextCenter = _.get(nextMarkers, '0.position', this.state.center);
           console.log('this is new center and marker ', nextCenter, nextMarkers);
+          this.props.setCenterSearchProp({
+            center: nextCenter
+          })
           this.setState({
             center: nextCenter,
             markers: nextMarkers,
@@ -106,4 +107,20 @@ const MapWithASearchBox = compose(
 );
 
 {/* <MapWithASearchBox /> */}
-export default MapWithASearchBox;
+const mapStateToProps = (state) => {
+  console.log('this is the state received in map state to props of MapWithaSearchBox', state)
+  const {center, content, lastFetched, markers, bounds } = state.SearchReducer
+  return {
+    center, content, lastFetched, markers, bounds
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  console.log('inside map dispatch to props connected with MapWithASearchBox',dispatch);
+  return {
+    setCenterSearchProp: (centerDetail) => {
+      dispatch(setCenterSearch(centerDetail));
+    }
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(MapWithASearchBox);

@@ -73,12 +73,12 @@ const withLife = lifecycle({
         console.log("inside onBoundsChanged function of drawingManager, this is the value of this",this);
         console.log('inside DrawingManager onBoundsChanged, this is center',refs.map.getCenter());
         const cent = refs.map.getCenter()
-        this.props.setCenterProp({
-          center: {
-            lat: cent.lat(),lng: cent.lng()
-          }
-        })
-        this.props.setBoundsProp(refs.map.getBounds());
+        // this.props.setCenterProp({
+        //   center: {
+        //     lat: cent.lat(),lng: cent.lng()
+        //   }
+        // })
+        // this.props.setBoundsProp(refs.map.getBounds());
         console.log('dispatching bounds as ',refs.map.getBounds());
         // this.setState({
         //   bounds: refs.map.getBounds(),
@@ -106,11 +106,11 @@ const withLife = lifecycle({
         const nextCenter = _.get(nextMarkers, '0.position', this.state.center);
         console.log('after changing place in drawing manager this is the new center', nextCenter);
         const cent = refs.map.getCenter();
-        this.props.setCenterProp({
-            center: {
-              lat: cent.lat(),lng: cent.lng()
-            }
-        });
+        // this.props.setCenterProp({
+        //     center: {
+        //       lat: cent.lat(),lng: cent.lng()
+        //     }
+        // });
         this.props.setMarkersProp(nextMarkers)
         // this.setState({
         //   center: nextCenter,
