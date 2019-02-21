@@ -8,8 +8,9 @@ const LifeCycleForSearch = lifecycle({
       console.log('inside component will mount of mapwithsearchbox, this are the arguments and this', arguments,this);
       const refs = {}
       console.log('this is the value of this in componentWillMount of MapWithSearchbox',this);
+      const { reff } = { props}
       this.setState({
-          reff:this.props.reff || {},
+          reff :this.props.reff || {},
         // onMapMounted: ref => {
         //   refs.map = ref;
         //   this.reff.map = ref;
@@ -18,12 +19,15 @@ const LifeCycleForSearch = lifecycle({
         //   refs.searchBox = ref;
         console.log("inside onSearchBoxMounted of LifeCycleForSearch",this,ref);
             this.setState((prevState)=>{
-                return {
+              console.log('setting searchbox on state.ref, this is previous state',prevState);
+              const x =  {
                     reff: {
                         ...prevState.reff,
                         searchBox: ref
                     }
                 }
+              console.log(x);
+              return x;
             });
           this.state.reff.searchBox = ref;
         },
@@ -41,7 +45,10 @@ const LifeCycleForSearch = lifecycle({
           // });
         },
         onPlacesChanged: (setCenterSearchProp,setMarkersSearchProp) => {
-          const places = refs.searchBox.getPlaces();
+          // const places = refs.searchBox.getPlaces();
+          // const places = this
+          const places=[];
+          console.log('inside onPlacesChanged function, this is value of this',this);
           const bounds = new google.maps.LatLngBounds();
           console.log('after place changed, these is bounds and places', bounds, places)
           places.forEach(place => {
