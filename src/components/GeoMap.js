@@ -3,11 +3,11 @@ import React, {Component} from 'react';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import Map from './DrawingManager';
-import { withProps } from 'recompose';
-import { MapConfig, PolygonOptions } from '../constants/MapConstants';
+import { PolygonOptions } from '../constants/MapConstants';
 import { setCenter, setWatchId, setInsideFence, setPolygon, setFence, setBounds, setMarkers } from '../actions/MapActions/MapActions';
+import GoogleMapLoadingProps from '../GoogleMapLoadingProps';
 
-const MapWithProps = withProps(MapConfig)(Map);
+const MapWithProps = GoogleMapLoadingProps(Map);
 class GeoMap extends Component {
   constructor(props) {
     super(props);

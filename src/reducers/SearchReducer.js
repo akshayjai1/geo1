@@ -30,6 +30,14 @@ export default (state = initialState, action) => {
             };
             console.log('this is reduced state in setBound',x);
             return x;
+        case types.SET_BOUNDS_SEARCH: 
+            console.log('reducing setBoundsSearch with state and action.payload',state,action.payload);
+            x =  {
+                ...state,
+                ...action.payload
+            };
+            console.log('this is reduced state in setBound',x);
+            return x;
         default:
             console.log('executing default action',state);
             return state;

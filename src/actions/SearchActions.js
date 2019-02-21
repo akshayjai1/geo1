@@ -19,3 +19,12 @@ export const setMarkersSearch = (markers) => {
       }
   }
 }
+export const setBoundsSearch = (bounds) => {
+  console.log('inside setMarkers with markers =  ', bounds);
+  return {
+      type: types.SET_BOUNDS_SEARCH,
+      payload: {
+        bounds,
+      }
+  }
+}

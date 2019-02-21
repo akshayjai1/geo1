@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { GoogleMap, Marker } from 'react-google-maps';
 
-import { setCenterSearch, setMarkersSearch } from './actions/SearchActions';
+import { setCenterSearch, setMarkersSearch, setBoundsSearch } from './actions/SearchActions';
 
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 
@@ -14,7 +14,7 @@ const GoogleMapWithSearch = props => {
     defaultZoom={15}
     center={props.center}
     ref={props.onMapMounted}
-    onBoundsChanged={props.onBoundsChanged}
+    onBoundsChanged={props.onBoundsChanged.bind(null,props.setBoundsSearchProp)}
     markers={props.markers}
   >
     <SearchBox
@@ -65,6 +65,9 @@ const GoogleMapWithSearch = props => {
       },
       setMarkersSearchProp: (markers) => {
         dispatch(setMarkersSearch(markers));
+      },
+      setBoundsSearchProp: (bounds) => {
+          dispatch(setBoundsSearch(bounds));
       }
     }
   }
