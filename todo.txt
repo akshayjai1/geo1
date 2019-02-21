@@ -5,3 +5,6 @@
 5. connect relay
 6. export vertices
 7. multiple polygons
+
+
+//check if we can collate this.reff with this.refs

@@ -9,18 +9,28 @@ const LifeCycleForSearch = lifecycle({
       const refs = {}
       console.log('this is the value of this in componentWillMount of MapWithSearchbox',this);
       this.setState({
-          reff:{},
-        onMapMounted: ref => {
-          refs.map = ref;
-          this.reff.map = ref;
-        },
+          reff:this.props.reff || {},
+        // onMapMounted: ref => {
+        //   refs.map = ref;
+        //   this.reff.map = ref;
+        // },
         onSearchBoxMounted: ref => {
-          refs.searchBox = ref;
-          this.reff.searchBox = ref;
+        //   refs.searchBox = ref;
+        console.log("inside onSearchBoxMounted of LifeCycleForSearch",this)
+            this.setState((prevState)=>{
+                return {
+                    reff: {
+                        ...prevState.reff,
+                        searchBox: ref
+                    }
+                }
+            });
+          this.state.reff.searchBox = ref;
         },
         onBoundsChanged: (setBoundsSearchProp) => {
-          console.log("inside onBoundsChanged function, this is the value of this",this);
-          setBoundsSearchProp(refs.map.getBounds());
+          console.log("inside onBoundsChanged function in LifeCycleForSearch, this is the value of this",this);
+        //   setBoundsSearchProp(refs.map.getBounds());
+        setBoundsSearchProp(this.props.reff.map.getBounds());
           // this.setState({
           //   center: refs.map.getCenter(),
           // });

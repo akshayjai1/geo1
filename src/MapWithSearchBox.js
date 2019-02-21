@@ -3,9 +3,11 @@ import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-map
 import GoogleMapWithSearch from './GoogleMapWithSearch';
 import LifeCycleForSearch from './lifeCycleForSearch';
 import GoogleMapLoadingProps from './GoogleMapLoadingProps';
+import LifeCycleForGoogleMap from './LifeCycleForGoogleMap';
 
 const MapWithASearchBox = compose(
   GoogleMapLoadingProps,
+  LifeCycleForGoogleMap,
   LifeCycleForSearch,
   withScriptjs,
   withGoogleMap

@@ -15,6 +15,7 @@ const GoogleMapWithSearch = props => {
     center={props.center}
     ref={props.onMapMounted}
     onBoundsChanged={props.onBoundsChanged.bind(null,props.setBoundsSearchProp)}
+    onIdle={props.onIdle.bind(null,props.setBoundsSearchProp)}
     markers={props.markers}
   >
     <SearchBox
