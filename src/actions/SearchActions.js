@@ -10,3 +10,12 @@ export const setCenterSearch = (centerDetail) => {
     });
   }
 }
+export const setMarkersSearch = (markers) => {
+  console.log('inside setMarkers with markers =  ', markers);
+  return {
+      type: types.SET_MARKERS_SEARCH,
+      payload: {
+        markers,
+      }
+  }
+}

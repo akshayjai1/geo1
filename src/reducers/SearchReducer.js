@@ -1,7 +1,7 @@
 import { types } from './../actions/types';
 
 const initialState = {
-    center: {lat: 20, lng: 80},
+    center: {lat: 30, lng: 80},
     content: 'Getting Position...',
     lastFetched: null,
     markers:[],
@@ -21,6 +21,14 @@ export default (state = initialState, action) => {
                 ...action.payload
             };
             console.log('this is reduced state in setCenter',x);
+            return x;
+        case types.SET_MARKERS_SEARCH: 
+            console.log('reducing setMarkersSearch with state and action.payload',state,action.payload);
+            x =  {
+                ...state,
+                markers: [...state.markers,...action.payload.markers.markers]
+            };
+            console.log('this is reduced state in setBound',x);
             return x;
         default:
             console.log('executing default action',state);
