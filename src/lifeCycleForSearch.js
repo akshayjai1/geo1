@@ -4,14 +4,19 @@ const google = window.google = window.google ? window.google : {}
 const _ = require("lodash");
 
 const LifeCycleForSearch = lifecycle({
-    componentWillMount(props) {
+    componentDidMount(props) {
       console.log('inside component will mount of mapwithsearchbox, this are the arguments and this', arguments,this);
       const refs = {}
       console.log('this is the value of this in componentWillMount of MapWithSearchbox',this);
       this.setState({
-        markers: this.props.markers,
+          reff:{},
         onMapMounted: ref => {
           refs.map = ref;
+          this.reff.map = ref;
+        },
+        onSearchBoxMounted: ref => {
+          refs.searchBox = ref;
+          this.reff.searchBox = ref;
         },
         onBoundsChanged: (setBoundsSearchProp) => {
           console.log("inside onBoundsChanged function, this is the value of this",this);
@@ -19,9 +24,6 @@ const LifeCycleForSearch = lifecycle({
           // this.setState({
           //   center: refs.map.getCenter(),
           // });
-        },
-        onSearchBoxMounted: ref => {
-          refs.searchBox = ref;
         },
         onPlacesChanged: (setCenterSearchProp,setMarkersSearchProp) => {
           const places = refs.searchBox.getPlaces();
