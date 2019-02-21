@@ -16,7 +16,7 @@ const LifeCycleForSearch = lifecycle({
         // },
         onSearchBoxMounted: ref => {
         //   refs.searchBox = ref;
-        console.log("inside onSearchBoxMounted of LifeCycleForSearch",this)
+        console.log("inside onSearchBoxMounted of LifeCycleForSearch",this,ref);
             this.setState((prevState)=>{
                 return {
                     reff: {
@@ -30,8 +30,13 @@ const LifeCycleForSearch = lifecycle({
         onBoundsChanged: (setBoundsSearchProp) => {
           console.log("inside onBoundsChanged function in LifeCycleForSearch, this is the value of this",this);
         //   setBoundsSearchProp(refs.map.getBounds());
-        setBoundsSearchProp(this.props.reff.map.getBounds());
-          // this.setState({
+        // console.log('trying to access map using this.props.reff.map',this.props.reff.map.getCenter());
+        // console.log('trying to access map using this.props.reff.map',this.props.reff.map.getBounds());
+         
+        // lets comment it for now, we do not need bounds changed as of now
+        // setBoundsSearchProp(this.props.reff.map.getBounds());
+        
+         // this.setState({
           //   center: refs.map.getCenter(),
           // });
         },

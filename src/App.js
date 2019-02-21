@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {BrowserRouter, Route, Switch, Redirect, NavLink } from 'react-router-dom';
 import Map from './Map';
 import './App.css';
-import MapWithASearchBox from './MapWithSearchBox';
+import MapWithASearchBox from './MapWithSearchBoxContainer';
 import { withProps } from 'recompose';
 import { MapConfig, PolygonOptions } from './constants/MapConstants';
 import { setCenter, setWatchId, setInsideFence, setPolygon, setFence } from './actions/MapActions/MapActions';
