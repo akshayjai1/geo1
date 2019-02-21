@@ -28,6 +28,8 @@ const MapWithASearchBox = compose(
         },
         markers: [],
         onMapMounted: ref => {
+          console.log('inside on map mounted of lifecycle for searchbox, this is ref ',ref);
+          console.log('we can get center from ref',ref.getCenter())
           refs.map = ref;
         },
         onBoundsChanged: () => {
