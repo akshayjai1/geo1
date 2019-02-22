@@ -10,7 +10,11 @@ import { compose, lifecycle } from 'recompose';
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 const _ = require("lodash");
-const GoogleMap1 = props => (
+
+
+const GoogleMap1 = props => {
+  
+  return (
   <GoogleMap
     defaultZoom={15}
     center={props.center}
@@ -59,6 +63,7 @@ const GoogleMap1 = props => (
     )}
   </GoogleMap>
 )
+    }
 const withLife = lifecycle({
   componentWillMount() {
     const refs = {}

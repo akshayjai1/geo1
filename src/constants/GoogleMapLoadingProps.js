@@ -1,5 +1,5 @@
 import { withProps } from 'recompose';
-import { MapConfig } from './constants/MapConstants';
+import { MapConfig } from './MapConstants';
 
 const GoogleMapLoadingProps = withProps(MapConfig)
 

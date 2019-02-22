@@ -3,13 +3,14 @@ import React, {Component} from 'react';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import {BrowserRouter, Route, Switch, Redirect, NavLink } from 'react-router-dom';
-import Map from './Map';
+import Map from './components/Map';
 import './App.css';
-import MapWithASearchBox from './MapWithSearchBoxContainer';
+import MapWithASearchBox from './components/MapWithSearchBoxContainer';
 import { withProps } from 'recompose';
 import { MapConfig, PolygonOptions } from './constants/MapConstants';
 import { setCenter, setWatchId, setInsideFence, setPolygon, setFence } from './actions/MapActions/MapActions';
 import GeoMap from './components/GeoMap';
+import GeoMapFn from './components/GeoMapFn';
 const MapWithProps = withProps(MapConfig)(Map);
 class App extends Component {
   constructor(props) {
@@ -24,9 +25,11 @@ class App extends Component {
         <BrowserRouter>
           <React.Fragment>
               <NavLink to="/geoFence">GeoFence</NavLink>{"  "}
+              <NavLink to="/geoFenceFn">geoFenceFn</NavLink>{"  "}
               <NavLink to="/geoSearch">Search</NavLink>
           <Switch>
             <Route path="/geoFence" component={GeoMap} />
+            <Route path="/geoFenceFn" component={GeoMapFn} />
             <Route path="/geoSearch" component={MapWithASearchBox} />
           </Switch>
           </React.Fragment>

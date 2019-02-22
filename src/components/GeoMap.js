@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Map from './DrawingManager';
 import { PolygonOptions } from '../constants/MapConstants';
 import { setCenter, setWatchId, setInsideFence, setPolygon, setFence, setBounds, setMarkers } from '../actions/MapActions/MapActions';
-import GoogleMapLoadingProps from '../GoogleMapLoadingProps';
+import GoogleMapLoadingProps from '../constants/GoogleMapLoadingProps';
 
 const MapWithProps = GoogleMapLoadingProps(Map);
 class GeoMap extends Component {

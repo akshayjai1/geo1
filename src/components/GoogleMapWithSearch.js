@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { GoogleMap, Marker } from 'react-google-maps';
 
-import { setCenterSearch, setMarkersSearch, setBoundsSearch } from './actions/SearchActions';
+import { setCenterSearch, setMarkersSearch, setBoundsSearch } from '../actions/SearchActions';
 
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 

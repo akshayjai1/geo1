@@ -83,3 +83,7 @@ export default (state = initialState, action) => {
     }
 };
 //todo use const/let at appropriate place
+
+export const WatchReducer = (state, action) => {
+    
+}
