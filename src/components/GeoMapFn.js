@@ -15,6 +15,10 @@ const GeoMapFn = (props) => {
     const [mapStatus, setMapStatus] = useState('Getting Position...');
     const [mapTimeStamp, setMapTimeStamp] = useState(null);
     const [insideFence, setInsideFence] = useState(null);
+    const [bounds, setBounds] = useState(null);
+    const [markers, setMarkers] = useState([]);
+    const searchRef = useRef("");
+    const mapRef = useRef("");
 
     
     const unwatchLocation = () => {
@@ -85,17 +89,11 @@ const GeoMapFn = (props) => {
           props.previousPolygon.setMap(null);
         }
         props.setPolygonProp(polygon);
-        // this.setState({previousPolygon: polygon});
-        console.log('this is polygon',polygon);
+         console.log('this is polygon',polygon);
         polygon.setOptions(PolygonOptions);
-        // polygon.setPaths(this.props.polygons);
         console.log('inside function done drawing, these are polygon vertices, ', polygon.getPaths());
         printPolygonVertices(polygon.getPaths());
-        // this.setState({
-        //   fence: new google.maps.Polygon({
-        //     paths: polygon.getPaths(),
-        //   }),
-        // });
+        
         props.setFenceProp(new google.maps.Polygon({
           paths: polygon.getPaths(),
         }) );

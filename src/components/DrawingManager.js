@@ -111,16 +111,12 @@ const withLife = lifecycle({
         const nextCenter = _.get(nextMarkers, '0.position', this.state.center);
         console.log('after changing place in drawing manager this is the new center', nextCenter);
         const cent = refs.map.getCenter();
-        // this.props.setCenterProp({
-        //     center: {
-        //       lat: cent.lat(),lng: cent.lng()
-        //     }
-        // });
+        this.props.setCenterProp({
+            center: {
+              lat: cent.lat(),lng: cent.lng()
+            }
+        });
         this.props.setMarkersProp(nextMarkers)
-        // this.setState({
-        //   center: nextCenter,
-        //   markers: nextMarkers,
-        // });
         // refs.map.fitBounds(bounds);
       },
     })
