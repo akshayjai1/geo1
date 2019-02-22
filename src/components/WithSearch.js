@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
+import { searchInput } from './styles/styled-components';
 const _ = require("lodash");
 const { compose, withProps, lifecycle } = require("recompose");
 const {
@@ -8,18 +8,8 @@ const {
 } = require("react-google-maps");
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 const google = window.google = window.google ? window.google : {}
-const searchInput = styled.input`
-          box-sizing: border-box;
-          border: 1px solid transparent;
-          width: 240px;
-          height: 32px;
-          margin-top: 27px;
-          padding: 0 12px;
-          border-radius: 3px;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);,
-          font-size: 14px;
-          outline: none;
-          text-overflow: ellipses;`
+
+
 const WithSearch = (props) => {
   const searchRef = useRef("");
   const [center, setCenter] = useState({

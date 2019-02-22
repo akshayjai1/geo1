@@ -1,25 +1,51 @@
 /* global google */
-import React from 'react';
-import {
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-  withScriptjs
-} from 'react-google-maps';
+import React, { useRef, useState } from 'react';
+import { withGoogleMap, GoogleMap, Marker, withScriptjs } from 'react-google-maps';
 import { compose, lifecycle } from 'recompose';
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+import { searchInput } from './styles/styled-components';
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 const _ = require("lodash");
 
 
 const GoogleMap1 = props => {
-  
+  const [markers, setMarkers] = useState([]);
+  const mapRef = useRef("");  
+  const searchRef = useRef("");
+  const onBoundsChanged = () => {
+    console.log("inside onBoundsChanged function of drawingManager, this is the value of this",this);
+    console.log('inside DrawingManager onBoundsChanged, this is center',mapRef.map.getCenter());
+    const cent = mapRef.map.getCenter()
+    console.log('dispatching bounds as ',mapRef.map.getBounds());
+  }
+  const onPlacesChanged = () => {
+    console.log('on places changed called');
+    const places = searchRef.getPlaces();
+    console.log('these are the places',places);
+    const bounds = new google.maps.LatLngBounds();
+
+    places.forEach(place => {
+      if (place.geometry.viewport) {
+        bounds.union(place.geometry.viewport)
+      } else {
+        bounds.extend(place.geometry.location)
+      }
+    });
+    const nextMarkers = places.map(place => ({
+      position: place.geometry.location,
+    }));
+    const nextCenter = _.get(nextMarkers, '0.position', center);
+    console.log('setting new center and new marker');
+    setCenter(nextCenter);
+    setMarkers(nextMarkers);
+    // refs.map.fitBounds(bounds);
+  }
   return (
   <GoogleMap
     defaultZoom={15}
     center={props.center}
-    ref={props.onMapMounted}
-    onBoundsChanged={props.onBoundsChanged}
+    ref={mapRef}
+    onBoundsChanged={onBoundsChanged}
   >
     <DrawingManager
       defaultDrawingMode={google.maps.drawing.OverlayType.POLYGON}
@@ -35,31 +61,20 @@ const GoogleMap1 = props => {
       onPolygonComplete={props.doneDrawing}
     />
     <SearchBox
-      ref={props.onSearchBoxMounted}
+      ref={searchRef}
       bounds={props.bounds}
       controlPosition={google.maps.ControlPosition.TOP_LEFT}
       onPlacesChanged={props.onPlacesChanged}
     >
-      <input
-        type="text"
-        placeholder="Customized your placeholder"
-        style={{
-          boxSizing: `border-box`,
-          border: `1px solid transparent`,
-          width: `240px`,
-          height: `32px`,
-          marginTop: `27px`,
-          padding: `0 12px`,
-          borderRadius: `3px`,
-          boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-          fontSize: `14px`,
-          outline: `none`,
-          textOverflow: `ellipses`,
-        }}
+      <searchInput type="text"
+        placeholder="Customized your placeholder"/>
       />
     </SearchBox>
     {props.center.lat && props.center.lng && (
       <Marker position={props.center} />
+    )}
+    {markers.map((marker, index) =>
+      <Marker key={index} position={marker.position} />
     )}
   </GoogleMap>
 )
@@ -70,14 +85,14 @@ const withLife = lifecycle({
 
     this.setState({
       markers: [],
-      onMapMounted: ref => {
-        console.log('inside onMapMounted setting ref to ',ref);
-        refs.map = ref;
-      },
+      // onMapMounted: ref => {
+      //   console.log('inside onMapMounted setting ref to ',ref);
+      //   refs.map = ref;
+      // },
       onBoundsChanged: () => {
         console.log("inside onBoundsChanged function of drawingManager, this is the value of this",this);
-        console.log('inside DrawingManager onBoundsChanged, this is center',refs.map.getCenter());
-        const cent = refs.map.getCenter()
+        // console.log('inside DrawingManager onBoundsChanged, this is center',refs.map.getCenter());
+        // const cent = mapRef.map.getCenter()
         // this.props.setCenterProp({
         //   center: {
         //     lat: cent.lat(),lng: cent.lng()
