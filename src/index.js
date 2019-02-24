@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-// import MapWithASearchBox from './MapWithSearchBox';
-// ReactDOM.render(<MapWithASearchBox /> , document.getElementById('root'));
 import { Provider } from 'react-redux';
 import { store } from './CreateStore';
 ReactDOM.render(

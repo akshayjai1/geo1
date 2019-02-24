@@ -1,9 +1,10 @@
 /* global google */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { withGoogleMap, GoogleMap, Marker, withScriptjs } from 'react-google-maps';
 import { compose, lifecycle } from 'recompose';
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
 import { searchInput } from './styles/styled-components';
+import { onPlacesChanged } from './utils/MapUtils';
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 const _ = require("lodash");
 
@@ -14,32 +15,11 @@ const GoogleMap1 = props => {
   const searchRef = useRef("");
   const onBoundsChanged = () => {
     console.log("inside onBoundsChanged function of drawingManager, this is the value of this",this);
-    console.log('inside DrawingManager onBoundsChanged, this is center',mapRef.map.getCenter());
-    const cent = mapRef.map.getCenter()
-    console.log('dispatching bounds as ',mapRef.map.getBounds());
+    console.log('inside DrawingManager onBoundsChanged, this is center',mapRef.current.getCenter());
+    const cent = mapRef.current.getCenter()
+    console.log('dispatching bounds as ',mapRef.current.getBounds());
   }
-  const onPlacesChanged = () => {
-    console.log('on places changed called');
-    const places = searchRef.getPlaces();
-    console.log('these are the places',places);
-    const bounds = new google.maps.LatLngBounds();
-
-    places.forEach(place => {
-      if (place.geometry.viewport) {
-        bounds.union(place.geometry.viewport)
-      } else {
-        bounds.extend(place.geometry.location)
-      }
-    });
-    const nextMarkers = places.map(place => ({
-      position: place.geometry.location,
-    }));
-    const nextCenter = _.get(nextMarkers, '0.position', center);
-    console.log('setting new center and new marker');
-    setCenter(nextCenter);
-    setMarkers(nextMarkers);
-    // refs.map.fitBounds(bounds);
-  }
+  
   return (
   <GoogleMap
     defaultZoom={15}
@@ -60,16 +40,6 @@ const GoogleMap1 = props => {
       }}
       onPolygonComplete={props.doneDrawing}
     />
-    <SearchBox
-      ref={searchRef}
-      bounds={props.bounds}
-      controlPosition={google.maps.ControlPosition.TOP_LEFT}
-      onPlacesChanged={props.onPlacesChanged}
-    >
-      <searchInput type="text"
-        placeholder="Customized your placeholder"/>
-      />
-    </SearchBox>
     {props.center.lat && props.center.lng && (
       <Marker position={props.center} />
     )}
@@ -138,3 +108,25 @@ const withLife = lifecycle({
   },
 })
 export default compose(withLife, withScriptjs, withGoogleMap)(GoogleMap1);
+/**
+ * 
+ *  
+    <SearchBox
+      ref={searchRef}
+      bounds={props.bounds}
+      controlPosition={google.maps.ControlPosition.TOP_LEFT}
+      onPlacesChanged={useCallback(()=> {onPlacesChanged({
+        searchRef,google,setMarkers,setCenter:props.setCenterProp,currentCenter: props.center
+      })})}
+    >
+      <input className={"search-box-input"} type="text"
+        placeholder="Customized your placeholder"/>
+      />
+    </SearchBox>
+    {props.center.lat && props.center.lng && (
+      <Marker position={props.center} />
+    )}
+    {markers.map((marker, index) =>
+      <Marker key={index} position={marker.position} />
+    )}
+ */
