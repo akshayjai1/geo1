@@ -21,3 +21,25 @@ export const onPlacesChanged = ({searchRef,google,setMarkers,currentCenter,setCe
   setMarkers(nextMarkers);
   // refs.map.fitBounds(bounds);
 }
+
+export const printPolygonVertices = (polygonPath) => {
+  console.log('printing polygon vertices');
+  let vertices = getPolygonVerticesFnFromPolygonPath(polygonPath)
+  for( let vertex of vertices) {
+    console.log(vertex.lat(),vertex.lng());
+  }
+}
+
+export const getPolygonVerticesFromPolygonPath = (polygonPath) => {
+  const polygon = polygonPath.j;
+  return polygon.map((vertex)=> ({lat:vertex.lat(),lng:vertex.lng()}))
+}
+export const getPolygonVerticesFnFromPolygonPath = (polygonPath) => {
+  const polygon = polygonPath.j;
+  return polygon;
+}
+export const printAllPolygons = (polygonArray) => {
+  polygonArray.forEach((polygon) => {
+    console.log("lat: ",polygon.lat, " lng: ", polygon.lng);
+  })
+}

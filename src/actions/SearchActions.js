@@ -1,4 +1,4 @@
-import { types } from './types';
+import types from './types';
 export const setCenterSearch = (centerDetail) => {
   console.log('inside setCenter action with center ',centerDetail);
   return (dispatch) => {

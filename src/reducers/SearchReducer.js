@@ -1,4 +1,4 @@
-import { types } from './../actions/types';
+import types from './../actions/types';
 
 const initialState = {
     center: {lat: 30, lng: 80},

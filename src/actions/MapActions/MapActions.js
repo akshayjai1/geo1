@@ -1,4 +1,4 @@
-import { types } from './../types';
+import types from './../types';
 export const setCenter = (centerDetail) => {
   console.log('inside setCenter action with center ',centerDetail);
   return (dispatch) => {

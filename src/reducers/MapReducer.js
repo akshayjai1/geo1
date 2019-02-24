@@ -1,4 +1,4 @@
-import { types } from './../actions/types';
+import types from './../actions/types';
 const customPolygon1 = [
     {lat:14,lng:80},
     {lat:13,lng:80},
