@@ -11,8 +11,16 @@ const NewGoogleMapFn = (props) => {
   const newMapRef = React.useRef("");
   const searchInputRef = React.useRef("");
   
-  const [markers, setMarkers] = React.useState([]);
-  const [vertices, dispatchPathUpdate] = React.useReducer((paths,action)=> {
+  const [markers, dispatchMarkersUpdate] = React.useReducer((markers, action)=> {
+    switch(action.type) {
+      case types.ADD_MARKER: 
+        return [...markers,action.payload];
+        break;
+      default:
+        return markers;
+    }
+  },[]);
+  const [polygons, dispatchPathUpdate] = React.useReducer((paths,action)=> {
     switch(action.type) {
       case types.ADD_POLYGON_VERTICES:
         return [...paths, action.payload]
@@ -58,7 +66,7 @@ const NewGoogleMapFn = (props) => {
           type: types.ADD_POLYGON_VERTICES,
           payload: polygonVertices
         });
-        console.log('these are vertices array ', vertices);
+        console.log('these are vertices array ', polygons);
       })
 
 
@@ -110,13 +118,14 @@ const NewGoogleMapFn = (props) => {
           };
 
           // Create a marker for each place.
-          // markers.push();
-          setMarkers([...markers, new google.maps.Marker({
+          dispatchMarkersUpdate({
+            type: types.ADD_MARKER,
+            payload: new google.maps.Marker({
             map: map,
             icon: icon,
             title: place.name,
             position: place.geometry.location
-          })])
+          })});
           if (place.geometry.viewport) {
             // Only geocodes have viewport.
             bounds.union(place.geometry.viewport);
@@ -131,14 +140,17 @@ const NewGoogleMapFn = (props) => {
 
 
   React.useEffect(()=>{
-    console.log('vertices',vertices);
-  },[vertices]);
+    console.log('vertices', polygons);
+  },[polygons]);
+  React.useEffect(()=>{
+    console.log('markers', markers);
+  },[markers]);
   return (
     <div>
-      <input id="pac-input" class="controls" type="text" placeholder="Search Box" ref={searchInputRef}></input>
-    <div id="newMap" style={{height:"100vh"}} ref={newMapRef}>
+      <input id="pac-input" className="controls" type="text" placeholder="Search Box" ref={searchInputRef}></input>
+      <div id="newMap" style={{height:"80vh"}} ref={newMapRef}>
 
-    </div>
+      </div>
     </div>
   )
 }

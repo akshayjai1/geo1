@@ -4,7 +4,7 @@ export const googleMapURL = `https://maps.googleapis.com/maps/api/js?libraries=g
 export const loadingElement = <p>Loading maps...</p>;
 export const containerElement = <div className="map-container" />;
 export const mapElement = <div className="map" />;
-export const myLatLng = {lat: -34.397, lng: 150.644};
+export const myLatLng = {lat: 20.397, lng: 73};
 export const MapConfig = {
   googleMapURL,
   loadingElement,
