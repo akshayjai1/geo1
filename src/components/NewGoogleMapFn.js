@@ -3,6 +3,7 @@ import { googleMapURL, PolygonOptions, myLatLng, contentStringForInfoWindow } fr
 import { printPolygonVertices, getPolygonVerticesFromPolygonPath } from './utils/MapUtils';
 import types from '../actions/types';
 const scriptjs = require('scriptjs');
+const uuidv1 = require('uuid/v1');
 
 const google = window.google = window.google ? window.google : {}
 
@@ -20,19 +21,41 @@ const NewGoogleMapFn = (props) => {
         return markers;
     }
   },[]);
-  const [polygons, dispatchPathUpdate] = React.useReducer((paths,action)=> {
+  const [polygons, dispatchPathUpdate] = React.useReducer((polygons,action)=> {
     switch(action.type) {
       case types.ADD_POLYGON_VERTICES:
-        return [...paths, action.payload]
+        return [...polygons, action.payload];
+      case types.SET_POLYGON_SELECTED:
+        const selectedId = action.payload.id;
+        const updatedPolygonArray = polygons.map((polygon,index)=>{ 
+          if(polygon.id == selectedId){
+            return { ...polygon, selected: !polygon.selected };
+          } else {
+            return polygon;
+          }
+        });
+        console.log('this is updated polygon array',updatedPolygonArray);
+        return updatedPolygonArray;
+      case types.DELETE_SELECTED_POLYGONS:
+        console.log('before deleting selected polygons',polygons);
+        const newPolygons = polygons.filter(polygon=> {
+          if(polygon.selected){
+            polygon.polygonReference.setMap(null);
+            return false; // to remove this polygon from array
+          } else {
+            return true
+          }
+        });
+        console.log('after deleting selected polygons',newPolygons);
+        return newPolygons;
       default: 
-        return paths;
+        return polygons;
     }
   },[]); 
   
 
   React.useEffect(()=>{
     scriptjs(googleMapURL, 'google',() => {
-      
       map = new google.maps.Map(newMapRef.current, {
         center: myLatLng,
         zoom: 8,
@@ -58,14 +81,30 @@ const NewGoogleMapFn = (props) => {
       });
       drawingManager.setMap(map);
       google.maps.event.addListener(drawingManager, "polygoncomplete", (polygon) => {
+        console.log('this is created polygon', polygon);
         const path = polygon.getPath();
         console.log('polygon is complete, these are the vertices',path);
         printPolygonVertices(path);
-        const polygonVertices = getPolygonVerticesFromPolygonPath(path);
+        const Polygon = {
+          id: uuidv1(),
+          selected: false,
+          polygonVertices: getPolygonVerticesFromPolygonPath(path),
+          polygonReference: polygon,
+        }
         dispatchPathUpdate({
           type: types.ADD_POLYGON_VERTICES,
-          payload: polygonVertices
+          payload: Polygon
         });
+        polygon.addListener("click",(polygonEvent)=>{
+          console.log('polygon clicked this is event',polygonEvent);
+          console.log('this is selection ',polygonEvent.va.view.getSelection());
+          dispatchPathUpdate({
+            type: types.SET_POLYGON_SELECTED,
+            payload: {
+              id: Polygon.id
+            }
+          })
+        })
         console.log('these are vertices array ', polygons);
       })
 
@@ -141,16 +180,25 @@ const NewGoogleMapFn = (props) => {
 
   React.useEffect(()=>{
     console.log('vertices', polygons);
+
   },[polygons]);
   React.useEffect(()=>{
     console.log('markers', markers);
   },[markers]);
+
+  const deleteSelectedPolygons = () => {
+    dispatchPathUpdate({
+      type: types.DELETE_SELECTED_POLYGONS
+    });
+  }
+
   return (
     <div>
-      <input id="pac-input" className="controls" type="text" placeholder="Search Box" ref={searchInputRef}></input>
+      <input id="pac-input" className="controls" type="text" placeholder="Search Box" ref={searchInputRef}/>
       <div id="newMap" style={{height:"80vh"}} ref={newMapRef}>
 
       </div>
+      <button onClick={deleteSelectedPolygons}>Clear Selected Polygon From Map</button>
     </div>
   )
 }
