@@ -29,6 +29,11 @@ const NewGoogleMapFn = (props) => {
         const selectedId = action.payload.id;
         const updatedPolygonArray = polygons.map((polygon,index)=>{ 
           if(polygon.id == selectedId){
+            if(polygon.selected){
+              polygon.polygonReference.setOptions({fillOpacity: .05})
+            } else {
+              polygon.polygonReference.setOptions({fillOpacity: .2})
+            }
             return { ...polygon, selected: !polygon.selected };
           } else {
             return polygon;
