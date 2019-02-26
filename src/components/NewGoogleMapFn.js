@@ -43,7 +43,7 @@ const NewGoogleMapFn = (props) => {
         return updatedPolygonArray;
       case types.DELETE_SELECTED_POLYGONS:
         console.log('before deleting selected polygons',polygons);
-        const newPolygons = polygons.filter(polygon=> {
+        let newPolygons = polygons.filter(polygon=> {
           if(polygon.selected){
             polygon.polygonReference.setMap(null);
             return false; // to remove this polygon from array
@@ -53,6 +53,12 @@ const NewGoogleMapFn = (props) => {
         });
         console.log('after deleting selected polygons',newPolygons);
         return newPolygons;
+      case types.DELETE_ALL_POLYGONS_FROM_MAP:
+        console.log('before deleting all polygons',polygons);
+        newPolygons = polygons.map(polygon=> {
+            polygon.polygonReference.setMap(null);
+        });
+        return [];
       default: 
         return polygons;
     }
@@ -196,6 +202,11 @@ const NewGoogleMapFn = (props) => {
       type: types.DELETE_SELECTED_POLYGONS
     });
   }
+  const deleteAllPolygonsFromMap = () => {
+    dispatchPathUpdate({
+      type: types.DELETE_ALL_POLYGONS_FROM_MAP
+    });
+  }
 
   return (
     <div>
@@ -204,6 +215,7 @@ const NewGoogleMapFn = (props) => {
 
       </div>
       <button onClick={deleteSelectedPolygons}>Clear Selected Polygon From Map</button>
+      <button onClick={deleteAllPolygonsFromMap}>Clear Map</button>
     </div>
   )
 }
