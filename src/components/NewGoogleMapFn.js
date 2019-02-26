@@ -99,6 +99,7 @@ const NewGoogleMapFn = (props) => {
         const Polygon = {
           id: uuidv1(),
           selected: false,
+          manual: true,
           polygonVertices: getPolygonVerticesFromPolygonPath(path),
           polygonReference: polygon,
         }
