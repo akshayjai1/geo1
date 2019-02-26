@@ -1,6 +1,6 @@
 import React from 'react';
 import { googleMapURL, PolygonOptions, myLatLng, contentStringForInfoWindow } from '../constants/MapConstants';
-import { printPolygonVertices, getPolygonVerticesFromPolygonPath } from './utils/MapUtils';
+import { printPolygonVertices, getPolygonVerticesFromPolygonPath, getRandomArbitrary } from './utils/MapUtils';
 import types from '../actions/types';
 const scriptjs = require('scriptjs');
 const uuidv1 = require('uuid/v1');
@@ -9,8 +9,10 @@ const google = window.google = window.google ? window.google : {}
 
 const NewGoogleMapFn = (props) => {
   var map;
-  const newMapRef = React.useRef("");
-  const searchInputRef = React.useRef("");
+  const newMapRef = React.useRef('');
+  const searchInputRef = React.useRef('');
+  const latRef = React.useRef('');
+  const lngRef = React.useRef('');
   
   const [markers, dispatchMarkersUpdate] = React.useReducer((markers, action)=> {
     switch(action.type) {
@@ -78,6 +80,7 @@ const NewGoogleMapFn = (props) => {
         map: map,
         title: 'Hello World!'
       })
+      console.log('this is the default marker',marker);
 
 
       var drawingManager = new google.maps.drawing.DrawingManager({
@@ -99,6 +102,7 @@ const NewGoogleMapFn = (props) => {
         const Polygon = {
           id: uuidv1(),
           selected: false,
+          shipsInsideCurrentPolygon: [],
           manual: true,
           polygonVertices: getPolygonVerticesFromPolygonPath(path),
           polygonReference: polygon,
@@ -208,6 +212,45 @@ const NewGoogleMapFn = (props) => {
       type: types.DELETE_ALL_POLYGONS_FROM_MAP
     });
   }
+  const allocateShipsToFence = () => {
+    const coordsArray = []
+    for(let i = 0; i< 100; i++){
+      coordsArray.push({lat: getRandomArbitrary(-90,90), lng: getRandomArbitrary(-179,180)})
+    }
+    checkGeoFenceForShips(coordsArray);
+  }
+  const checkGeoFenceForShips = (shipCoordsArray) => {
+    polygons.forEach((polygon,polygonIndex) => {
+      polygon.shipsInsideCurrentPolygon = shipCoordsArray.filter((coord, coordIndex) => {
+        if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(coord.lat,coord.lng),polygon.polygonReference)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      
+    })
+  }
+
+  const checkPosition = () => {
+    const position = new google.maps.LatLng(latRef.current.value, lngRef.current.value);
+    const marker = new google.maps.Marker({
+      position,
+      map: map,
+      title: 'Mark for textbox input'
+    })
+    console.log('this is marker from input box',marker);
+    const polygonsContainingCurrentPosition = polygons.filter((polygon)=> {
+      if(google.maps.geometry.poly.containsLocation(position,polygon.polygonReference)){
+        return true;
+      } else {
+        return false;
+      }
+    });
+    console.log('this are the polygons containing the current entered position in input boxes', polygonsContainingCurrentPosition);
+    // return marker;
+  }
 
   return (
     <div>
@@ -216,7 +259,10 @@ const NewGoogleMapFn = (props) => {
 
       </div>
       <button onClick={deleteSelectedPolygons}>Clear Selected Polygon From Map</button>
-      <button onClick={deleteAllPolygonsFromMap}>Clear Map</button>
+      <button onClick={deleteAllPolygonsFromMap}>Clear Map</button><br />
+      <label htmlFor="lat">Latitude</label><input type="number" name="lat" ref={latRef}/>
+      <label htmlFor="lat">Longitude</label><input type="number" name="lng" ref={lngRef}/>
+      <button onClick={checkPosition}>Check Position if inside some geofence</button>
     </div>
   )
 }

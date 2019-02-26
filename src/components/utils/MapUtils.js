@@ -43,3 +43,6 @@ export const printAllPolygons = (polygonArray) => {
     console.log("lat: ",polygon.lat, " lng: ", polygon.lng);
   })
 }
+export function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
